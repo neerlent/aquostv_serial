@@ -1,6 +1,6 @@
 {
-  "domain": "aquostv2",
-  "name": "AquosTV2",
+  "domain": "aquostv_serial",
+  "name": "AquosTVSerial",
   "documentation": "",
   "requirements": [],
   "dependencies": [],
