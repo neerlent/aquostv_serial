@@ -1,10 +1,10 @@
 """Module to control a Sharp Aquos Remote Control enabled TV."""
-import pkgutil
 import yaml
 import serial
 import logging
 
 _LOGGER = logging.getLogger(__name__)
+
 
 class TV(object):
     """
@@ -36,8 +36,14 @@ class TV(object):
         if command_map not in self._VALID_COMMAND_MAPS:
             raise ValueError("command_layout should be one of %s, not %s" % (str(self._VALID_COMMAND_MAPS), command_map))
 
-        #stream = pkgutil.get_data("sharp_aquos_rc", "commands/%s.yaml" % command_map)
-        stream = open('/config/custom_components/aquostv2/commands/{}.yaml'.format(command_map))
+        # To access files from imported package:
+        #   import pkgutil
+        #   stream = pkgutil.get_data("sharp_aquos_rc", "commands/%s.yaml" % command_map)
+        # To access files when hass object is available:
+        #   yamlpath = hass.config.path('custom_components', 'aquostv_serial', 'commands')
+        #   stream = open(os.path.join(yamlpath, f'{command_map}.yaml'))
+        # Use direct path access for now
+        stream = open('/config/custom_components/aquostv_serial/commands/{}.yaml'.format(command_map))
         self.command = yaml.load(stream, Loader=yaml.FullLoader)
 
     def _send_command_raw(self, command, opt=''):
@@ -88,7 +94,7 @@ class TV(object):
                 break
         status = bytes(result).strip().decode("utf-8")
         _LOGGER.debug('*Received "%s"', status)
-        
+
         if "OK" in status:
             return True
         if "ERR" in status:
@@ -127,14 +133,13 @@ class TV(object):
         return {"name": self._send_command('name'),
                 "model": self._send_command('model'),
                 "version": self._send_command('version'),
-                "ip_version": self._send_command('ip_version')
-               }
+                "ip_version": self._send_command('ip_version')}
 
     def power_on_command_settings(self, opt='?'):
         """
         Description:
 
-            Manage whether or not the TV will respond to power() on/off commands
+            Manage whether or not TV will respond to power() on/off commands
             Call with no arguments to get current setting
 
         Arguments:
@@ -181,11 +186,12 @@ class TV(object):
 
         Arguments:
             opt: string
-                Name provided from input list or key from yaml ("HDMI 1" or "hdmi_1")
+                Name provided from input list or key from yaml
+                ("HDMI 1" or "hdmi_1")
         """
         if opt == '?':
             index = self._send_command('input_index')
-            if index == False:
+            if index is False:
                 # return self.command['input']['tv']['index']
                 return False
             else:
