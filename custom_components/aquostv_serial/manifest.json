@@ -3,6 +3,7 @@
   "name": "AquosTVSerial",
   "homeassistant": "0.96.0",
   "documentation": "",
+  "version": "0.1.1",
   "requirements": [],
   "dependencies": [],
   "codeowners": []
