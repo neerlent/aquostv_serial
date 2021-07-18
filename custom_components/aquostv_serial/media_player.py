@@ -9,7 +9,7 @@ import logging
 import voluptuous as vol
 
 from homeassistant.components.media_player import (
-    PLATFORM_SCHEMA, MediaPlayerDevice)
+    PLATFORM_SCHEMA, MediaPlayerEntity)
 from homeassistant.components.media_player.const import (
     SUPPORT_NEXT_TRACK, SUPPORT_PAUSE, SUPPORT_PLAY,
     SUPPORT_PREVIOUS_TRACK, SUPPORT_SELECT_SOURCE, SUPPORT_TURN_OFF,
@@ -115,7 +115,7 @@ def _retry(func):
     return wrapper
 
 
-class SharpAquosTVDevice(MediaPlayerDevice):
+class SharpAquosTVDevice(MediaPlayerEntity):
     """Representation of a Aquos TV."""
 
     def __init__(self, name, remote, power_on_enabled=False):
