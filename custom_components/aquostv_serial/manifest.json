@@ -5,6 +5,7 @@
   "documentation": "",
   "version": "0.1.2",
   "requirements": [],
-  "dependencies": [],
-  "codeowners": []
+  "codeowners": [],
+  "iot_class": "local_polling",
+  "loggers": []
 }
