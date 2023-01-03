@@ -11,12 +11,7 @@ import logging
 import voluptuous as vol
 
 from homeassistant.components.media_player import (
-    PLATFORM_SCHEMA, MediaPlayerEntity)
-from homeassistant.components.media_player.const import (
-    SUPPORT_NEXT_TRACK, SUPPORT_PAUSE, SUPPORT_PLAY,
-    SUPPORT_PREVIOUS_TRACK, SUPPORT_SELECT_SOURCE, SUPPORT_TURN_OFF,
-    SUPPORT_TURN_ON, SUPPORT_VOLUME_MUTE, SUPPORT_VOLUME_SET,
-    SUPPORT_VOLUME_STEP)
+    PLATFORM_SCHEMA, MediaPlayerEntity, MediaPlayerEntityFeature)
 from homeassistant.const import (
     CONF_HOST, CONF_NAME, CONF_PASSWORD, CONF_PORT, CONF_TIMEOUT,
     CONF_USERNAME, STATE_OFF, STATE_ON)
@@ -39,11 +34,6 @@ DEFAULT_USERNAME = 'admin'
 DEFAULT_PASSWORD = 'password'
 DEFAULT_TIMEOUT = 0.5
 DEFAULT_RETRIES = 2
-
-SUPPORT_SHARPTV = SUPPORT_TURN_OFF | \
-    SUPPORT_NEXT_TRACK | SUPPORT_PAUSE | SUPPORT_PREVIOUS_TRACK | \
-    SUPPORT_SELECT_SOURCE | SUPPORT_VOLUME_MUTE | SUPPORT_VOLUME_STEP | \
-    SUPPORT_VOLUME_SET | SUPPORT_PLAY
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Exclusive(CONF_HOST, CONF_TYPE): {
@@ -128,7 +118,17 @@ class SharpAquosTVDevice(MediaPlayerEntity):
     """Representation of a Aquos TV."""
 
     _attr_source_list = list(SOURCES.values())
-    _attr_supported_features = SUPPORT_SHARPTV
+    _attr_supported_features = (
+        MediaPlayerEntityFeature.TURN_OFF
+        | MediaPlayerEntityFeature.NEXT_TRACK
+        | MediaPlayerEntityFeature.PAUSE
+        | MediaPlayerEntityFeature.PREVIOUS_TRACK
+        | MediaPlayerEntityFeature.SELECT_SOURCE
+        | MediaPlayerEntityFeature.VOLUME_MUTE
+        | MediaPlayerEntityFeature.VOLUME_STEP
+        | MediaPlayerEntityFeature.VOLUME_SET
+        | MediaPlayerEntityFeature.PLAY
+    )
 
     def __init__(
         self, name: str, remote, power_on_enabled: bool = False
@@ -136,7 +136,7 @@ class SharpAquosTVDevice(MediaPlayerEntity):
         """Initialize the aquos device."""
         self._power_on_enabled = power_on_enabled
         if power_on_enabled:
-            self._attr_supported_features |= SUPPORT_TURN_ON
+            self._attr_supported_features |= MediaPlayerEntityFeature.TURN_ON
         # Save a reference to the imported class
         self._attr_name = name
         # Assume that the TV is not muted
