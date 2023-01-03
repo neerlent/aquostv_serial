@@ -11,10 +11,10 @@ import logging
 import voluptuous as vol
 
 from homeassistant.components.media_player import (
-    PLATFORM_SCHEMA, MediaPlayerEntity, MediaPlayerEntityFeature)
+    PLATFORM_SCHEMA, MediaPlayerEntity, MediaPlayerEntityFeature, MediaPlayerState)
 from homeassistant.const import (
     CONF_HOST, CONF_NAME, CONF_PASSWORD, CONF_PORT, CONF_TIMEOUT,
-    CONF_USERNAME, STATE_OFF, STATE_ON)
+    CONF_USERNAME)
 from homeassistant.core import HomeAssistant
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -110,7 +110,7 @@ def _retry(func):
             except (OSError, TypeError, ValueError):
                 update_retries -= 1
                 if update_retries == 0:
-                    obj.set_state(STATE_OFF)
+                    obj.set_state(MediaPlayerState.OFF)
     return wrapper
 
 
@@ -150,9 +150,9 @@ class SharpAquosTVDevice(MediaPlayerEntity):
     def update(self) -> None:
         """Retrieve the latest data."""
         if self._remote.power() == 1:
-            self._attr_state = STATE_ON
+            self._attr_state = MediaPlayerState.ON
         else:
-            self._attr_state = STATE_OFF
+            self._attr_state = MediaPlayerState.OFF
         # Set TV to be able to remotely power on
         if self._power_on_enabled:
             self._remote.power_on_command_settings(2)
