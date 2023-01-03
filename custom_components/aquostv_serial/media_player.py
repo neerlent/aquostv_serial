@@ -4,6 +4,8 @@ Support for interface with an Aquos TV.
 For more details about this platform, please refer to the documentation at
 https://home-assistant.io/components/media_player.aquostv/
 """
+from __future__ import annotations
+
 import logging
 
 import voluptuous as vol
@@ -18,7 +20,10 @@ from homeassistant.components.media_player.const import (
 from homeassistant.const import (
     CONF_HOST, CONF_NAME, CONF_PASSWORD, CONF_PORT, CONF_TIMEOUT,
     CONF_USERNAME, STATE_OFF, STATE_ON)
+from homeassistant.core import HomeAssistant
 import homeassistant.helpers.config_validation as cv
+from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 
 # restore when pulling from proper python package
 #REQUIREMENTS = ['sharp_aquos_rc==0.3.2']
@@ -64,7 +69,12 @@ SOURCES = {0: 'TV / Antenna',
            8: 'PC_IN'}
 
 
-def setup_platform(hass, config, add_entities, discovery_info=None):
+def setup_platform(
+    hass: HomeAssistant,
+    config: ConfigType, 
+    add_entities: AddEntitiesCallback, 
+    discovery_info: DiscoveryInfoType | None = None,
+) -> None:
     """Set up the Sharp Aquos TV platform."""
     from . import tv
 
@@ -96,7 +106,6 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
         remote = tv.TV(port)
 
     add_entities([SharpAquosTVDevice(name, remote, power_on_enabled)])
-    return True
 
 
 def _retry(func):
@@ -121,7 +130,9 @@ class SharpAquosTVDevice(MediaPlayerEntity):
     _attr_source_list = list(SOURCES.values())
     _attr_supported_features = SUPPORT_SHARPTV
 
-    def __init__(self, name, remote, power_on_enabled=False):
+    def __init__(
+        self, name: str, remote, power_on_enabled: bool = False
+    ) -> None:
         """Initialize the aquos device."""
         self._power_on_enabled = power_on_enabled
         if power_on_enabled:
