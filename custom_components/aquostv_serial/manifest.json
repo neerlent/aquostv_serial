@@ -1,10 +1,10 @@
 {
-  "domain": "aquostv_serial",
-  "name": "AquosTVSerial",
-  "homeassistant": "0.96.0",
-  "documentation": "",
-  "version": "0.1.2",
-  "requirements": [],
-  "dependencies": [],
-  "codeowners": []
+  "domain": "aquostv",
+  "name": "Sharp Aquos TV",
+  "codeowners": [],
+  "documentation": "https://www.home-assistant.io/integrations/aquostv",
+  "iot_class": "local_polling",
+  "loggers": ["sharp_aquos_rc"],
+  "quality_scale": "legacy",
+  "requirements": ["sharp_aquos_rc==0.3.2"]
 }
