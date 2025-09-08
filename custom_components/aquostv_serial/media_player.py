@@ -181,7 +181,7 @@ class SharpAquosTVDevice(MediaPlayerEntity):
             self._attr_source = SOURCES.get(input)
         # Get volume
         self._attr_volume_level = self._remote.volume() / 60
-        _LOGGER.debug("state: {}, input: {} source: {}".format(self._attr_state, type(input), self._source))
+        _LOGGER.debug("state: {}, input: {} source: {}".format(self._attr_state, type(input), self._attr_source))
 
     @_retry
     def turn_off(self) -> None:
